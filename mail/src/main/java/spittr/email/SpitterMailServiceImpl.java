@@ -8,6 +8,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import spittr.domain.Spittle;
 
@@ -15,9 +17,12 @@ import spittr.domain.Spittle;
 public class SpitterMailServiceImpl implements SpitterMailService {
 
 	private JavaMailSender mailSender;
+	@Autowired
+	private SpringTemplateEngine thymeleaf;
 
 	@Autowired
-	public SpitterMailServiceImpl(JavaMailSender mailSender) {
+	public SpitterMailServiceImpl(JavaMailSender mailSender, SpringTemplateEngine thymeleaf) {
+		this.thymeleaf = thymeleaf;
 		this.mailSender = mailSender;
 	}
 
@@ -51,10 +56,16 @@ public class SpitterMailServiceImpl implements SpitterMailService {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
 		String spitterName = spittle.getSpitter().getFullName();
+		Context ctx = new Context();
+		ctx.setVariable("spitterName", spitterName);
+		ctx.setVariable("spittleText", spittle.getText());
+		String emailText = thymeleaf.process("mail.html", ctx);
+		helper.setText(emailText, true);
 		helper.setFrom("linkaicheng2048@163.com");
 		helper.setTo(to);
-		helper.setSubject("New spittle from " + spitterName);
-		helper.setText("<html><body><a href='https://www.baidu.com'>aaaaa</a></body></html>", true);
+		// helper.setSubject("New spittle from " + spitterName);
+		// helper.setText("<html><body><a
+		// href='https://www.baidu.com'>aaaaa</a></body></html>", true);
 		// ClassPathResource couponImage = new
 		// ClassPathResource("/collateral/coupon.jpg");
 		// helper.addAttachment("Coupon.jpg", couponImage);

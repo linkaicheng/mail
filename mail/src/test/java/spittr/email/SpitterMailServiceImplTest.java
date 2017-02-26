@@ -27,9 +27,9 @@ public class SpitterMailServiceImplTest {
 		Spitter spitter = new Spitter(1L, "linkaicheng2048@163.com", "linkaicheng2017", "linkaicheng2048@163.com",
 				"linkaicheng2048@163.com", true);
 		Spittle spittle = new Spittle(1L, spitter, "Hiya!just do it?", new Date());
-		mailService.sendSimpleSpittleEmail("linkaicheng@outlook.com", spittle);
-		// mailService.sendSpittleEmailWithAttachment("linkaicheg@outlook.com",
+		// mailService.sendSimpleSpittleEmail("linkaicheng@outlook.com",
 		// spittle);
+		mailService.sendSpittleEmailWithAttachment("linkaicheng@outlook.com", spittle);
 
 		// MimeMessage[] receivedMessages = mailServer.getReceivedMessages();
 		// assertEquals(1, receivedMessages.length);
